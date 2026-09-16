@@ -1,0 +1,33 @@
+<order>
+    <details>
+        <quantity>7</quantity>
+        <stock>(S30) Standard Smooth</stock>
+        <foil>false</foil>
+    </details>
+    <fronts>
+        <card>
+            <id>1wlrM7pNHQ5NqS9GY5LWH7Hd04TtNgHI4</id>
+            <sourceType>Google Drive</sourceType>
+            <slots>0,1,2,3</slots>
+            <name>Rite of Flame.png</name>
+            <query>rite of flame</query>
+        </card>
+        <card>
+            <id>2abc</id>
+            <sourceType>Google Drive</sourceType>
+            <slots>4,5,6</slots>
+            <name>Lightning Bolt.png</name>
+            <query>lightning bolt</query>
+        </card>
+    </fronts>
+    <backs>
+        <card>
+            <id>1M7LJMlEmYumq8QtiYt1HNfJt1Zmi1Y9j</id>
+            <sourceType>Google Drive</sourceType>
+            <slots>4,5</slots>
+            <name>0. Ravager of the Fells.png</name>
+            <query>ravager of fells</query>
+        </card>
+    </backs>
+    <cardback>C:\Users\chilli-axe\Desktop\cardback.png</cardback>
+</order>

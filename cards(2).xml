@@ -1,0 +1,23 @@
+<order>
+    <details>
+        <quantity>2</quantity>
+        <bracket>18</bracket>
+        <stock>(S30) Standard Smooth</stock>
+        <foil>false</foil>
+    </details>
+    <fronts>
+        <card>
+            <id>1q6RwmbLWo1prMZ1Xl9f6MdPZAWRMikam</id>
+            <slots>0</slots>
+            <name>Sol Ring (C13 259).jpg</name>
+            <query>sol ring</query>
+        </card>
+        <card>
+            <id>1Y48EHkr6UCttUvfhPNiSN62Js3mo15MY</id>
+            <slots>1</slots>
+            <name>Black Lotus.png</name>
+            <query>black lotus</query>
+        </card>
+    </fronts>
+    <cardback>1LrVX0pUcye9n_0RtaDNVl2xPrQgn7CYf</cardback>
+</order>

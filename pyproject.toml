@@ -1,0 +1,19 @@
+[project]
+name = "thermal-deck"
+version = "0.1.0"
+description = "Druckt Phomemo-M110-Labels für alle Karten aus einer MPC Autofill order.xml"
+requires-python = ">=3.10"
+dependencies = [
+    "pyphomemo @ git+https://github.com/mkuhlmann/pyphomemo.git",
+    "gdown>=5.2",
+]
+
+[project.scripts]
+thermal-deck = "thermal_deck.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -3,7 +3,7 @@
 ## Symptom
 
 ```bash
-thermal-deck print "cards(2).xml"
+mpc2label print "cards(2).xml"
 ```
 
 - Job 1 (e.g. "Sol Ring") printed correctly.
@@ -48,7 +48,7 @@ This explains every earlier observation:
 ## Fix
 
 Wait `--delay` seconds after *every* `print_raster()` call, including the
-last one, before the connection closes (`src/thermal_deck/cli.py::cmd_print`).
+last one, before the connection closes (`src/mpc2label/cli.py::cmd_print`).
 Default raised from 3.0s to 5.0s, since the second job in a run needs
 noticeably longer than the first (the head is already warm).
 

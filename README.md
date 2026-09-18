@@ -1,10 +1,12 @@
-# thermal-deck
+# mpc2label
 
-Takes an [MPC-Autofill](https://github.com/chilli-axe/mpc-autofill) `order.xml`,
-downloads the image for each referenced card from Google Drive, and prints a
-separate label with the card image for **every physical copy** (every slot)
-on a Phomemo M110 label printer - over Bluetooth LE, using
-[pyphomemo](https://github.com/mkuhlmann/pyphomemo).
+Prints identification labels for physical *Magic: The Gathering* proxy
+cards straight from an [MPC-Autofill](https://github.com/chilli-axe/mpc-autofill)
+`order.xml` - the same order file MPC-Autofill uses to send your deck off for
+printing. mpc2label reads that file, downloads the image for each referenced
+card from Google Drive, and prints a separate label with the card image for
+**every physical copy** (every slot) on a Phomemo M110 label printer - over
+Bluetooth LE, using [pyphomemo](https://github.com/mkuhlmann/pyphomemo).
 
 ## Installation
 
@@ -20,7 +22,7 @@ is installed separately for the Google Drive downloads.
 ## Pairing the printer / finding its address
 
 ```bash
-./.venv/bin/thermal-deck scan
+./.venv/bin/mpc2label scan
 ```
 
 Lists nearby BLE devices, flagging any detected Phomemo printers along with
@@ -34,13 +36,13 @@ export PHOMEMO_ADDR="12:CB:A3:08:0F:34"
 ## Listing the cards in the XML (without printing)
 
 ```bash
-./.venv/bin/thermal-deck list order.xml
+./.venv/bin/mpc2label list order.xml
 ```
 
 ## Printing labels
 
 ```bash
-./.venv/bin/thermal-deck print order.xml
+./.venv/bin/mpc2label print order.xml
 ```
 
 For each `<card>` element in `<fronts>`, the image is first downloaded from
@@ -74,7 +76,7 @@ aspect ratio of the (cropped) card image automatically. Options:
   every card).
 - `--sort name` - print alphabetically instead of in XML order.
 - `--cache-dir DIRECTORY` - where downloaded images are cached (default:
-  `.thermal-deck-cache` next to the XML). Images aren't re-downloaded on
+  `.mpc2label-cache` next to the XML). Images aren't re-downloaded on
   repeated runs with the same XML.
 - `--dry-run DIRECTORY` - instead of printing, writes PNG previews of the
   labels to the given directory (no printer needed, good for testing).
@@ -97,9 +99,9 @@ images aren't fetched again on a re-run.
 - **MPC-Autofill XML**: `<order><fronts><card>` contains one card design per
   entry, with `id` (Google Drive ID or local path), `sourceType`, `name`,
   `query`, and `slots` (comma-separated slot indices - one entry per
-  physical copy in the deck). `src/thermal_deck/mpcfill.py` parses the plain
+  physical copy in the deck). `src/mpc2label/mpcfill.py` parses the plain
   XML.
-- **Image download**: `src/thermal_deck/images.py` downloads Google Drive
+- **Image download**: `src/mpc2label/images.py` downloads Google Drive
   entries via `gdown.download(id=...)` (which automatically follows the
   confirmation-token flow Google requires for larger files) and caches them
   locally under the Drive ID as filename. `sourceType == "Local File"`
@@ -110,3 +112,11 @@ images aren't fetched again on a re-run.
   of that; we render the card image (or text fallback) with Pillow into a
   1-bit raster (`image_to_raster` / `text_to_raster`) and send it over one
   open `PhomemoPrinter` connection.
+
+## Acknowledgements
+
+- [MPC-Autofill](https://github.com/chilli-axe/mpc-autofill) for the
+  `order.xml` format and the whole proxy-printing workflow this tool builds
+  on top of.
+- [pyphomemo](https://github.com/mkuhlmann/pyphomemo) for the Phomemo M110
+  Bluetooth LE protocol implementation that does all the actual printing.

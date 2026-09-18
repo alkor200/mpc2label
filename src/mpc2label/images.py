@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .mpcfill import CardEntry
 
-DEFAULT_CACHE_DIRNAME = ".thermal-deck-cache"
+DEFAULT_CACHE_DIRNAME = ".mpc2label-cache"
 
 
 class ImageFetchError(RuntimeError):

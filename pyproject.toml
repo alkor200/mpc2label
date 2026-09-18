@@ -1,7 +1,7 @@
 [project]
-name = "thermal-deck"
+name = "mpc2label"
 version = "0.1.0"
-description = "Prints Phomemo M110 labels for every card in an MPC Autofill order.xml"
+description = "Prints Phomemo M110 labels for every Magic: The Gathering card in an MPC Autofill order.xml"
 requires-python = ">=3.10"
 dependencies = [
     "pyphomemo @ git+https://github.com/mkuhlmann/pyphomemo.git",
@@ -9,7 +9,7 @@ dependencies = [
 ]
 
 [project.scripts]
-thermal-deck = "thermal_deck.cli:main"
+mpc2label = "mpc2label.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]

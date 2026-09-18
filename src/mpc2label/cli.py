@@ -34,7 +34,7 @@ def _collect_entries(order, include_backs: bool, sort: str) -> list[CardEntry]:
 
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="thermal-deck",
+        prog="mpc2label",
         description="Prints labels for every card in an MPC-Autofill order.xml on a Phomemo M110.",
     )
     sub = parser.add_subparsers(dest="command", required=True)

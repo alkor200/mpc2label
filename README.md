@@ -1,9 +1,9 @@
 # thermal-deck
 
-Nimmt eine [MPC-Autofill](https://github.com/chilli-axe/mpc-autofill) `order.xml`
-entgegen, lädt für jede referenzierte Karte das Bild von Google Drive und
-druckt für **jede physische Kopie** (jeden Slot) ein eigenes Label mit dem
-Kartenbild auf einem Phomemo-M110-Labeldrucker – über Bluetooth LE, mittels
+Takes an [MPC-Autofill](https://github.com/chilli-axe/mpc-autofill) `order.xml`,
+downloads the image for each referenced card from Google Drive, and prints a
+separate label with the card image for **every physical copy** (every slot)
+on a Phomemo M110 label printer - over Bluetooth LE, using
 [pyphomemo](https://github.com/mkuhlmann/pyphomemo).
 
 ## Installation
@@ -13,92 +13,100 @@ python3 -m venv .venv
 ./.venv/bin/pip install -e .
 ```
 
-`pyphomemo` ist nicht auf PyPI und wird direkt von GitHub installiert
-(steht in `pyproject.toml`). Es bringt `bleak` (BLE) und `Pillow` (Rendering)
-mit, zusätzlich wird `gdown` für den Google-Drive-Download installiert.
+`pyphomemo` isn't on PyPI and is installed straight from GitHub (see
+`pyproject.toml`). It pulls in `bleak` (BLE) and `Pillow` (rendering); `gdown`
+is installed separately for the Google Drive downloads.
 
-## Drucker koppeln / Adresse finden
+## Pairing the printer / finding its address
 
 ```bash
 ./.venv/bin/thermal-deck scan
 ```
 
-Listet nahegelegene BLE-Geräte inkl. erkannter Phomemo-Drucker mit ihrer
-Bluetooth-MAC-Adresse auf. Die Adresse dann per `--addr` übergeben oder als
-Umgebungsvariable setzen:
+Lists nearby BLE devices, flagging any detected Phomemo printers along with
+their Bluetooth MAC address. Pass that address via `--addr`, or set it as an
+environment variable:
 
 ```bash
 export PHOMEMO_ADDR="12:CB:A3:08:0F:34"
 ```
 
-## Karten aus der XML auflisten (ohne zu drucken)
+## Listing the cards in the XML (without printing)
 
 ```bash
-./.venv/bin/thermal-deck list bestellung.xml
+./.venv/bin/thermal-deck list order.xml
 ```
 
-## Labels drucken
+## Printing labels
 
 ```bash
-./.venv/bin/thermal-deck print bestellung.xml --label 40x30
+./.venv/bin/thermal-deck print order.xml
 ```
 
-Für jedes `<card>`-Element in `<fronts>` wird zuerst das Bild von Google Drive
-geladen (einmal pro Kartendesign, danach aus dem Cache) und dann **für jeden
-Eintrag in `<slots>` ein eigenes Label mit dem Kartenbild** gedruckt – bei
-`slots=4,5,6` also dreimal dasselbe Bild-Label. Schlägt der Download fehl
-(z. B. Datei nicht mehr "Jeder mit Link" freigegeben, oder Google-Drive-Limit
-erreicht), wird stattdessen ein Text-Label mit dem Kartennamen gedruckt und
-eine Warnung ausgegeben – der Lauf bricht dafür nicht ab. Optionen:
+For each `<card>` element in `<fronts>`, the image is first downloaded from
+Google Drive (once per card design, then served from the cache), and then
+**one label with the card image is printed for every entry in `<slots>`** -
+e.g. `slots=4,5,6` prints the same image label three times. If the download
+fails (e.g. the file is no longer shared "Anyone with the link", or a Google
+Drive rate limit kicks in), a text label with the card name is printed
+instead and a warning is shown - the run doesn't abort.
 
-- `--addr MAC` – Bluetooth-Adresse des M110 (sonst `PHOMEMO_ADDR` oder
-  Auto-Scan).
-- `--label 40x30` – Labelgröße in mm (Breite x Höhe). Maximalbreite des M110:
-  48 mm (384 Dots), auch wenn eine breitere Rolle (z. B. 57 mm) eingelegt ist –
-  der Druckkopf selbst ist nur 48 mm breit, der Rest bleibt weiß. Höhe `0`
-  (z. B. `--label 48x0`) = Höhe folgt automatisch dem Seitenverhältnis des
-  Kartenbilds, kein Zuschnitt auf eine feste Boxgröße.
-- `--continuous` – **bei einer Endlosrolle ohne vorgestanzte Lücken/Marken
-  unbedingt setzen.** Ohne dieses Flag nimmt der Drucker an, dass er
-  vorgestanzte Etiketten mit Lücken-Sensor bedruckt, und kann beim
-  Papiervorschub falsch takten.
-- `--no-fit` – Bild nur auf Labelbreite skalieren statt in die volle
-  `BxH`-Box einzupassen (Default: eingepasst, mit weißen Rändern zentriert).
-- `--threshold 0-255` – fester Schwarz/Weiß-Schwellwert statt
-  Floyd-Steinberg-Dithering (Default: Dithering, meist besser für Kartenkunst).
-- `--font-size 32`, `--align center|left|right` – nur für den Text-Fallback.
-- `--include-backs` – druckt zusätzlich Labels für individuelle
-  Kartenrückseiten aus `<backs>` (die generische `<cardback>` wird ignoriert,
-  da sie für alle Karten gleich ist).
-- `--sort name` – alphabetisch statt in XML-Reihenfolge drucken.
-- `--cache-dir VERZEICHNIS` – wohin heruntergeladene Bilder gecacht werden
-  (Default: `.thermal-deck-cache` neben der XML). Bei mehreren Läufen mit
-  derselben XML werden Bilder nicht erneut heruntergeladen.
-- `--dry-run VERZEICHNIS` – druckt nicht, sondern schreibt PNG-Vorschauen der
-  Labels in das angegebene Verzeichnis (kein Drucker nötig, gut zum Testen).
-- `--delay 0.5` – Pause zwischen zwei Labels in Sekunden.
+Printing always uses the **full printer width** (48 mm / 384 dots, even if a
+wider roll such as 57 mm is loaded - the print head itself is only 48 mm
+wide, the rest stays blank) and **continuous-roll media mode** (not the
+gap-sensor mode for pre-cut labels) - this is fixed to match our continuous-
+roll hardware, and neither is configurable. Each label's height follows the
+aspect ratio of the (cropped) card image automatically. Options:
 
-**Hinweis zu Google Drive:** Die Bilder werden nur heruntergeladen, wenn die
-jeweilige Datei mit "Jeder mit Link" freigegeben ist (Standard bei
-MPC-Autofill-Bild-Repos). Bei sehr großen Decks kann Google Drive den
-Zugriff über `gdown` temporär drosseln ("have had many accesses") – der Cache
-sorgt zumindest dafür, dass bereits geladene Bilder bei einem erneuten Lauf
-nicht nochmal geholt werden müssen.
+- `--addr MAC` - Bluetooth address of the M110 (otherwise `PHOMEMO_ADDR` or
+  auto-scan).
+- `--crop-pct 8` - before scaling, crops this percentage of width/height off
+  every edge of the card image (default: 8, removes the black card frame on
+  MPC-Autofill images so the name/art fill the full label width). `0` = no
+  crop, full card image.
+- `--threshold 0-255` - fixed black/white threshold instead of
+  Floyd-Steinberg dithering (default: dithering, usually looks better for
+  card art).
+- `--font-size 32`, `--align center|left|right` - only used for the text
+  fallback.
+- `--include-backs` - also prints labels for individual card backs from
+  `<backs>` (the generic `<cardback>` is ignored since it's the same for
+  every card).
+- `--sort name` - print alphabetically instead of in XML order.
+- `--cache-dir DIRECTORY` - where downloaded images are cached (default:
+  `.thermal-deck-cache` next to the XML). Images aren't re-downloaded on
+  repeated runs with the same XML.
+- `--dry-run DIRECTORY` - instead of printing, writes PNG previews of the
+  labels to the given directory (no printer needed, good for testing).
+- `--delay 5.0` - pause after **every** label (including the last) in
+  seconds, before the next job is sent or the BLE connection is closed.
+  `print_raster()` returns as soon as the data has been sent - the print
+  head still needs time afterwards to mechanically finish printing and eject
+  the label. If the connection is closed while that's happening, the
+  physical print aborts (a short paper feed, no image, no exception). Raise
+  this if a label comes out incomplete, especially for larger/darker labels.
 
-## Wie es funktioniert
+**Note on Google Drive:** images are only downloaded if the file is shared
+"Anyone with the link" (the default for MPC-Autofill image repos). For very
+large decks, Google Drive may temporarily throttle access via `gdown`
+("have had many accesses") - the cache at least ensures already-downloaded
+images aren't fetched again on a re-run.
 
-- **MPC-Autofill-XML**: `<order><fronts><card>` enthält je ein Kartendesign
-  mit `id` (Google-Drive-ID oder lokaler Pfad), `sourceType`, `name`, `query`
-  und `slots` (kommagetrennte Slot-Indizes – ein Eintrag pro physischer
-  Kopie im Deck). `src/thermal_deck/mpcfill.py` parst das reine XML.
-- **Bild-Download**: `src/thermal_deck/images.py` lädt Google-Drive-Einträge
-  per `gdown.download(id=...)` (folgt automatisch dem Bestätigungs-Token-Flow,
-  den Google für größere Dateien verlangt) und cacht sie lokal unter der
-  Drive-ID als Dateiname. `sourceType == "Local File"` liest stattdessen
-  direkt von der Festplatte.
-- **Phomemo M110**: 203 dpi / 8 Dots pro mm, verbindet sich per Bluetooth LE
-  (GATT-Service `0xff00`, Write-Characteristic `0xff02`), Daten werden in
-  128-Byte-Chunks als ESC/POS-artige Rasterbefehle gestreamt. `pyphomemo`
-  kapselt das komplett; wir rendern Kartenbild (oder Text-Fallback) mit
-  Pillow zu einem 1-Bit-Raster (`image_to_raster` / `text_to_raster`) und
-  schicken es über eine offene `PhomemoPrinter`-Verbindung.
+## How it works
+
+- **MPC-Autofill XML**: `<order><fronts><card>` contains one card design per
+  entry, with `id` (Google Drive ID or local path), `sourceType`, `name`,
+  `query`, and `slots` (comma-separated slot indices - one entry per
+  physical copy in the deck). `src/thermal_deck/mpcfill.py` parses the plain
+  XML.
+- **Image download**: `src/thermal_deck/images.py` downloads Google Drive
+  entries via `gdown.download(id=...)` (which automatically follows the
+  confirmation-token flow Google requires for larger files) and caches them
+  locally under the Drive ID as filename. `sourceType == "Local File"`
+  reads directly from disk instead.
+- **Phomemo M110**: 203 dpi / 8 dots per mm, connects over Bluetooth LE
+  (GATT service `0xff00`, write characteristic `0xff02`), data is streamed
+  in 128-byte chunks as ESC/POS-style raster commands. `pyphomemo` wraps all
+  of that; we render the card image (or text fallback) with Pillow into a
+  1-bit raster (`image_to_raster` / `text_to_raster`) and send it over one
+  open `PhomemoPrinter` connection.

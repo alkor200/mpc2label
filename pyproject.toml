@@ -1,7 +1,7 @@
 [project]
 name = "thermal-deck"
 version = "0.1.0"
-description = "Druckt Phomemo-M110-Labels für alle Karten aus einer MPC Autofill order.xml"
+description = "Prints Phomemo M110 labels for every card in an MPC Autofill order.xml"
 requires-python = ">=3.10"
 dependencies = [
     "pyphomemo @ git+https://github.com/mkuhlmann/pyphomemo.git",

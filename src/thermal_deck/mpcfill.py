@@ -1,6 +1,6 @@
-"""Parser für das MPC-Autofill order.xml Format.
+"""Parser for the MPC-Autofill order.xml format.
 
-Schema (siehe https://github.com/chilli-axe/mpc-autofill/wiki/XML-Schema-Specification):
+Schema (see https://github.com/chilli-axe/mpc-autofill/wiki/XML-Schema-Specification):
 
 <order>
     <details>
@@ -10,19 +10,19 @@ Schema (siehe https://github.com/chilli-axe/mpc-autofill/wiki/XML-Schema-Specifi
     </details>
     <fronts>
         <card>
-            <id>...google drive id oder pfad...</id>
+            <id>...google drive id or path...</id>
             <sourceType>Google Drive</sourceType>
             <slots>0,1,2,3</slots>
             <name>Rite of Flame.png</name>
             <query>rite of flame</query>
         </card>
     </fronts>
-    <backs>...gleiche Struktur, für individuelle Kartenrückseiten...</backs>
-    <cardback>...Google-Drive-ID oder Pfad des Standard-Rückseitenbilds...</cardback>
+    <backs>...same structure, for individual card backs...</backs>
+    <cardback>...Google Drive ID or path of the default back image...</cardback>
 </order>
 
-Jedes <card>-Element ist bereits ein eigenständiges Kartendesign; die Anzahl der
-Einträge in <slots> entspricht der Stückzahl, die davon im Deck benötigt wird.
+Each <card> element is already its own card design; the number of entries in
+<slots> is the quantity of it needed in the deck.
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ class CardEntry:
     query: str
     source_type: str
     slots: list[int]
-    side: str  # "front" oder "back"
+    side: str  # "front" or "back"
 
     @property
     def quantity(self) -> int:
@@ -97,7 +97,7 @@ def parse_order(path: str | Path) -> Order:
     tree = ET.parse(path)
     root = tree.getroot()
     if root.tag != "order":
-        raise ValueError(f"Erwarte <order> als Root-Element, gefunden: <{root.tag}>")
+        raise ValueError(f"Expected <order> as the root element, found: <{root.tag}>")
 
     details = root.find("details")
     quantity = int(_text(details, "quantity", "0") or "0")

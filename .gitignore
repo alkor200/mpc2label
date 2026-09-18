@@ -2,3 +2,10 @@
 __pycache__/
 *.egg-info/
 *.pyc
+.DS_Store
+
+# Downloaded card images (cache) and generated preview PNGs are build
+# artifacts, not source - and often copyrighted card art that shouldn't be
+# committed.
+.thermal-deck-cache/
+preview/

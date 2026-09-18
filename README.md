@@ -1,6 +1,6 @@
 # mpc2label
 
-Fast and cheap solution to  *Magic: The Gathering* proxies on a label printer while you wait for your MPC order.
+Fast and cheap solution to print *Magic: The Gathering* proxies on a label printer while you wait for your MPC order.
 Runs straight from an [MPC-Autofill](https://github.com/chilli-axe/mpc-autofill)
 `order.xml` - the same order file MPC-Autofill uses to send your deck off for
 printing. mpc2label reads that file, downloads the image for each referenced

@@ -1,33 +1,37 @@
 <order>
     <details>
-        <quantity>7</quantity>
+        <quantity>3</quantity>
+        <bracket>18</bracket>
         <stock>(S30) Standard Smooth</stock>
         <foil>false</foil>
     </details>
     <fronts>
         <card>
-            <id>1wlrM7pNHQ5NqS9GY5LWH7Hd04TtNgHI4</id>
-            <sourceType>Google Drive</sourceType>
-            <slots>0,1,2,3</slots>
-            <name>Rite of Flame.png</name>
-            <query>rite of flame</query>
+            <id>1q6RwmbLWo1prMZ1Xl9f6MdPZAWRMikam</id>
+            <slots>0</slots>
+            <name>Sol Ring (C13 259).jpg</name>
+            <query>sol ring</query>
         </card>
         <card>
-            <id>2abc</id>
-            <sourceType>Google Drive</sourceType>
-            <slots>4,5,6</slots>
-            <name>Lightning Bolt.png</name>
-            <query>lightning bolt</query>
+            <id>1Y48EHkr6UCttUvfhPNiSN62Js3mo15MY</id>
+            <slots>1</slots>
+            <name>Black Lotus.png</name>
+            <query>black lotus</query>
+        </card>
+        <card>
+            <id>1FQh-z8mxN6zsyrGs4jNY6NCxz466LKDo</id>
+            <slots>2</slots>
+            <name>Gnottvold Hermit.png</name>
+            <query>gnottvold hermit</query>
         </card>
     </fronts>
     <backs>
         <card>
-            <id>1M7LJMlEmYumq8QtiYt1HNfJt1Zmi1Y9j</id>
-            <sourceType>Google Drive</sourceType>
-            <slots>4,5</slots>
-            <name>0. Ravager of the Fells.png</name>
-            <query>ravager of fells</query>
+            <id>1t_WWufKOGMPayLqUhTjzCWq9iNwpZG1s</id>
+            <slots>2</slots>
+            <name>Chrome Host Hulk.png</name>
+            <query>chrome host hulk</query>
         </card>
     </backs>
-    <cardback>C:\Users\chilli-axe\Desktop\cardback.png</cardback>
+    <cardback>1LrVX0pUcye9n_0RtaDNVl2xPrQgn7CYf</cardback>
 </order>
